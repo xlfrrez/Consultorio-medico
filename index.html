@@ -1,201 +1,218 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Consultorio Médico - CRM/ERP</title>
-  <link rel="stylesheet" href="./css/styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Consultorio Médico</title>
+    <!-- Google Fonts para un aspecto moderno -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Archivo CSS principal -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header class="header">
-    <div class="brand">
-      <!-- Logo placeholder -->
-      <img src="./assets/logo.png" alt="Logo" class="logo" />
-      <h1>Consultorio Médico</h1>
+    <div class="app-container">
+        <!-- Barra lateral de navegación -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Consultorio Médico</h2>
+                <p>Gestión Clínica</p>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-target="welcome-section">
+                    <span class="icon">🏠</span> Inicio
+                </button>
+                <button class="nav-btn" data-target="patients-section">
+                    <span class="icon">👥</span> Pacientes (CRM)
+                </button>
+                <button class="nav-btn" data-target="appointments-section">
+                    <span class="icon">📅</span> Agenda (Citas)
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            
+            <!-- SECCIÓN: INICIO (Welcome) -->
+            <section id="welcome-section" class="content-section active">
+                <div class="welcome-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; min-height: 70vh;">
+                    <h1 style="font-size: 3.5rem; margin-bottom: 1rem; color: var(--primary-dark);">Consultorio Médico</h1>
+                    <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 3rem;">El mejor sistema de gestión integral para su consultorio</p>
+                    <button class="btn btn-primary" style="font-size: 1.5rem; padding: 1rem 2.5rem; border-radius: 50px; box-shadow: var(--shadow-md); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="window.unlockApp()">Bienvenido</button>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: PACIENTES (CRM) -->
+            <section id="patients-section" class="content-section">
+                <header class="section-header">
+                    <h1>Gestión de Pacientes</h1>
+                    <button id="btn-new-patient" class="btn btn-primary">Nuevo Paciente</button>
+                </header>
+
+                <!-- Formulario de paciente (oculto por defecto) -->
+                <div id="patient-form-container" class="card hidden">
+                    <h3 id="patient-form-title">Registrar Nuevo Paciente</h3>
+                    <form id="patient-form">
+                        <input type="hidden" id="patient-id">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="patient-name">Nombre Completo</label>
+                                <input type="text" id="patient-name" required placeholder="Ej. Juan Pérez">
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-age">Edad</label>
+                                <input type="number" id="patient-age" min="0" placeholder="Ej. 30">
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-phone">Teléfono</label>
+                                <input type="tel" id="patient-phone" required placeholder="Ej. 555-1234">
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-email">Correo Electrónico</label>
+                                <input type="email" id="patient-email" placeholder="Ej. juan@correo.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="patient-date">Fecha</label>
+                                <input type="date" id="patient-date" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="patient-history">Expediente</label>
+                            <textarea id="patient-history" rows="3" placeholder="Alergias, padecimientos, etc."></textarea>
+                        </div>
+
+                        <!-- Opción de agendar cita automática -->
+                        <div class="form-group schedule-toggle-group">
+                            <label class="schedule-toggle-label">📅 ¿Agendar cita al registrar?</label>
+                            <div class="schedule-toggle-options">
+                                <label class="schedule-option" id="opt-agendar-label">
+                                    <input type="radio" name="schedule-option" id="opt-agendar" value="si" checked>
+                                    <span class="schedule-option-card">
+                                        <span class="schedule-icon">✅</span>
+                                        <span class="schedule-text">Sí, agendar cita</span>
+                                    </span>
+                                </label>
+                                <label class="schedule-option" id="opt-no-agendar-label">
+                                    <input type="radio" name="schedule-option" id="opt-no-agendar" value="no">
+                                    <span class="schedule-option-card">
+                                        <span class="schedule-icon">❌</span>
+                                        <span class="schedule-text">No agendar cita</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success">Guardar Paciente</button>
+                            <button type="button" class="btn btn-secondary" id="btn-cancel-patient">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabla de pacientes -->
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Fecha Registro</th>
+                                <th>Teléfono</th>
+                                <th>Estado de Cita</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patients-tbody">
+                            <!-- Los datos se insertarán vía JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: CITAS (ERP/Agenda) -->
+            <section id="appointments-section" class="content-section">
+                <header class="section-header">
+                    <h1>Agenda de Citas</h1>
+                    <button id="btn-new-appointment" class="btn btn-primary">Agendar Cita</button>
+                </header>
+
+                <!-- Formulario de cita (oculto por defecto) -->
+                <div id="appointment-form-container" class="card hidden">
+                    <h3 id="appointment-form-title">Programar Nueva Cita</h3>
+                    <form id="appointment-form">
+                        <input type="hidden" id="appointment-id">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="appointment-patient">Paciente</label>
+                                <select id="appointment-patient" required>
+                                    <option value="">Seleccione un paciente...</option>
+                                    <!-- Opciones cargadas dinámicamente -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-date">Fecha</label>
+                                <input type="date" id="appointment-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-time">Hora</label>
+                                <input type="time" id="appointment-time" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-status">Estado</label>
+                                <select id="appointment-status">
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="Completada">Completada</option>
+                                    <option value="Cancelada">Cancelada</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-total-cost">Costo Total ($)</label>
+                                <input type="number" id="appointment-total-cost" required placeholder="Ej. 650" value="650">
+                            </div>
+                            <div class="form-group">
+                                <label for="appointment-paid-amount">Monto Pagado ($)</label>
+                                <input type="number" id="appointment-paid-amount" required placeholder="Ej. 300" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointment-reason">Motivo de la consulta</label>
+                            <input type="text" id="appointment-reason" required placeholder="Ej. Revisión general">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success">Guardar Cita</button>
+                            <button type="button" class="btn btn-secondary" id="btn-cancel-appointment">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabla de citas -->
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha y Hora</th>
+                                <th>Paciente</th>
+                                <th>Motivo</th>
+                                <th>Estado de Cita</th>
+                                <th>Costo Total</th>
+                                <th>Monto Pagado</th>
+                                <th>Status de Pago</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-tbody">
+                            <!-- Los datos se insertarán vía JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
     </div>
-    <nav class="nav" aria-label="Main navigation">
-      <button class="nav-btn" data-section="dashboard">Dashboard</button>
-      <button class="nav-btn" data-section="crm">CRM - Pacientes</button>
-      <button class="nav-btn" data-section="erp">ERP - Citas/Servicios/Productos</button>
-    </nav>
-  </header>
 
-  <!-- Contenedor principal -->
-  <main class="container">
-
-    <!-- Sección: Dashboard (estadísticas) -->
-    <section id="dashboard" class="section">
-      <h2 class="section-title">Panel de Estadísticas</h2>
-      <div class="stats-grid" id="stats-grid">
-        <div class="stat-card">
-          <div class="stat-value" id="stat-patients">0</div>
-          <div class="stat-label">Total de pacientes</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="stat-appointments">0</div>
-          <div class="stat-label">Total de citas</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="stat-products">0</div>
-          <div class="stat-label">Total de productos</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Sección: CRM (Pacientes) -->
-    <section id="crm" class="section hidden" aria-labelledby="crm-title">
-      <h2 id="crm-title" class="section-title">Registro de Pacientes</h2>
-
-      <div class="grid two-columns">
-        <!-- Formulario de CRM -->
-        <div class="card card-form">
-          <h3 class="card-title">Nuevo Paciente</h3>
-          <form id="crm-form" novalidate>
-            <div class="form-row">
-              <label for="crm-name">Nombre</label>
-              <input type="text" id="crm-name" name="name" required placeholder="Ej. Ana Pérez"/>
-            </div>
-            <div class="form-row">
-              <label for="crm-age">Edad</label>
-              <input type="number" id="crm-age" name="age" min="0" placeholder="Edad"/>
-            </div>
-            <div class="form-row">
-              <label for="crm-phone">Teléfono</label>
-              <input type="tel" id="crm-phone" name="phone" placeholder="Ej. +34 600 123 456"/>
-            </div>
-            <div class="form-row">
-              <label for="crm-email">Correo</label>
-              <input type="email" id="crm-email" name="email" placeholder="nombre@ejemplo.com"/>
-            </div>
-            <div class="form-row">
-              <label for="crm-context">Motivo de consulta</label>
-              <textarea id="crm-context" name="reason" rows="3" placeholder="Motivo de la consulta"></textarea>
-            </div>
-            <div class="form-actions">
-              <button type="submit" class="btn btn-primary" id="crm-submit">Guardar</button>
-              <button type="button" class="btn" id="crm-clear">Limpiar</button>
-              <span class="form-note" id="crm-form-note"></span>
-            </div>
-          </form>
-        </div>
-
-        <!-- Tabla de pacientes -->
-        <div class="card card-table">
-          <h3 class="card-title">Pacientes Registrados</h3>
-          <div class="search-bar">
-            <input type="text" id="crm-search" placeholder="Buscar por nombre, teléfono o correo" />
-          </div>
-          <div id="crm-table-container" class="table-container"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Sección: ERP (Citas, Servicios, Productos) -->
-    <section id="erp" class="section hidden" aria-labelledby="erp-title">
-      <h2 id="erp-title" class="section-title">ERP</h2>
-
-      <!-- Sub-sección: Citas -->
-      <div class="card">
-        <h3 class="card-title">Registro de Citas Médicas</h3>
-        <form id="appointments-form" class="grid two-columns" novalidate>
-          <div class="form-row">
-            <label for="appointment-name">Nombre del Paciente</label>
-            <input type="text" id="appointment-name" name="name" required placeholder="Nombre del paciente"/>
-          </div>
-          <div class="form-row">
-            <label for="appointment-date">Fecha</label>
-            <input type="date" id="appointment-date" name="date" required/>
-          </div>
-          <div class="form-row">
-            <label for="appointment-reason">Motivo</label>
-            <input type="text" id="appointment-reason" name="reason" placeholder="Motivo de la cita"/>
-          </div>
-          <div class="form-row full">
-            <label for="appointment-desc">Descripción</label>
-            <textarea id="appointment-desc" name="description" rows="2" placeholder="Notas adicionales"></textarea>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary" id="appointment-submit">Guardar Cita</button>
-            <span class="form-note" id="appointment-form-note"></span>
-          </div>
-        </form>
-
-        <div class="table-section">
-          <h3 class="section-subtitle">Citas Registradas</h3>
-          <div id="appointments-table" class="table-container"></div>
-        </div>
-      </div>
-
-      <!-- Sub-sección: Servicios -->
-      <div class="card">
-        <h3 class="card-title">Servicios Médicos</h3>
-        <form id="services-form" class="grid two-columns" novalidate>
-          <div class="form-row">
-            <label for="service-name">Nombre</label>
-            <input type="text" id="service-name" name="name" required placeholder="Nombre del servicio"/>
-          </div>
-          <div class="form-row">
-            <label for="service-price">Precio</label>
-            <input type="number" id="service-price" name="price" min="0" step="0.01" placeholder="0.00"/>
-          </div>
-          <div class="form-row">
-            <label for="service-date">Fecha (opcional)</label>
-            <input type="date" id="service-date" name="date"/>
-          </div>
-          <div class="form-row full">
-            <label for="service-desc">Descripción</label>
-            <textarea id="service-desc" name="description" rows="2" placeholder="Descripción del servicio"></textarea>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary" id="service-submit">Guardar Servicio</button>
-            <span class="form-note" id="service-form-note"></span>
-          </div>
-        </form>
-
-        <div class="table-section">
-          <h3 class="section-subtitle">Servicios Registrados</h3>
-          <div id="services-table" class="table-container"></div>
-        </div>
-      </div>
-
-      <!-- Sub-sección: Productos -->
-      <div class="card">
-        <h3 class="card-title">Productos / Medicamentos</h3>
-        <form id="products-form" class="grid two-columns" novalidate>
-          <div class="form-row">
-            <label for="product-name">Nombre</label>
-            <input type="text" id="product-name" name="name" required placeholder="Nombre del producto"/>
-          </div>
-          <div class="form-row">
-            <label for="product-price">Precio</label>
-            <input type="number" id="product-price" name="price" min="0" step="0.01" placeholder="0.00"/>
-          </div>
-          <div class="form-row">
-            <label for="product-date">Fecha</label>
-            <input type="date" id="product-date" name="date"/>
-          </div>
-          <div class="form-row full">
-            <label for="product-desc">Descripción</label>
-            <textarea id="product-desc" name="description" rows="2" placeholder="Descripción del producto"></textarea>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary" id="product-submit">Guardar Producto</button>
-            <span class="form-note" id="product-form-note"></span>
-          </div>
-        </form>
-
-        <div class="table-section">
-          <h3 class="section-subtitle">Productos Registrados</h3>
-          <div id="products-table" class="table-container"></div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Snackbar / Toast para notificaciones -->
-  <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
-
-  <script type="module" src="./js/app.js"></script>
+    <!-- Scripts modularizados -->
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/patients.js"></script>
+    <script src="js/appointments.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consultorio Médico - CRM/ERP</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <!-- Logo placeholder -->
+      <img src="./assets/logo.png" alt="Logo" class="logo" />
+      <h1>Consultorio Médico</h1>
+    </div>
+    <nav class="nav" aria-label="Main navigation">
+      <button class="nav-btn" data-section="dashboard">Dashboard</button>
+      <button class="nav-btn" data-section="crm">CRM - Pacientes</button>
+      <button class="nav-btn" data-section="erp">ERP - Citas/Servicios/Productos</button>
+    </nav>
+  </header>
+
+  <!-- Contenedor principal -->
+  <main class="container">
+
+    <!-- Sección: Dashboard (estadísticas) -->
+    <section id="dashboard" class="section">
+      <h2 class="section-title">Panel de Estadísticas</h2>
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-patients">0</div>
+          <div class="stat-label">Total de pacientes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-appointments">0</div>
+          <div class="stat-label">Total de citas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-products">0</div>
+          <div class="stat-label">Total de productos</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección: CRM (Pacientes) -->
+    <section id="crm" class="section hidden" aria-labelledby="crm-title">
+      <h2 id="crm-title" class="section-title">Registro de Pacientes</h2>
+
+      <div class="grid two-columns">
+        <!-- Formulario de CRM -->
+        <div class="card card-form">
+          <h3 class="card-title">Nuevo Paciente</h3>
+          <form id="crm-form" novalidate>
+            <div class="form-row">
+              <label for="crm-name">Nombre</label>
+              <input type="text" id="crm-name" name="name" required placeholder="Ej. Ana Pérez"/>
+            </div>
+            <div class="form-row">
+              <label for="crm-age">Edad</label>
+              <input type="number" id="crm-age" name="age" min="0" placeholder="Edad"/>
+            </div>
+            <div class="form-row">
+              <label for="crm-phone">Teléfono</label>
+              <input type="tel" id="crm-phone" name="phone" placeholder="Ej. +34 600 123 456"/>
+            </div>
+            <div class="form-row">
+              <label for="crm-email">Correo</label>
+              <input type="email" id="crm-email" name="email" placeholder="nombre@ejemplo.com"/>
+            </div>
+            <div class="form-row">
+              <label for="crm-context">Motivo de consulta</label>
+              <textarea id="crm-context" name="reason" rows="3" placeholder="Motivo de la consulta"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="crm-submit">Guardar</button>
+              <button type="button" class="btn" id="crm-clear">Limpiar</button>
+              <span class="form-note" id="crm-form-note"></span>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tabla de pacientes -->
+        <div class="card card-table">
+          <h3 class="card-title">Pacientes Registrados</h3>
+          <div class="search-bar">
+            <input type="text" id="crm-search" placeholder="Buscar por nombre, teléfono o correo" />
+          </div>
+          <div id="crm-table-container" class="table-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección: ERP (Citas, Servicios, Productos) -->
+    <section id="erp" class="section hidden" aria-labelledby="erp-title">
+      <h2 id="erp-title" class="section-title">ERP</h2>
+
+      <!-- Sub-sección: Citas -->
+      <div class="card">
+        <h3 class="card-title">Registro de Citas Médicas</h3>
+        <form id="appointments-form" class="grid two-columns" novalidate>
+          <div class="form-row">
+            <label for="appointment-name">Nombre del Paciente</label>
+            <input type="text" id="appointment-name" name="name" required placeholder="Nombre del paciente"/>
+          </div>
+          <div class="form-row">
+            <label for="appointment-date">Fecha</label>
+            <input type="date" id="appointment-date" name="date" required/>
+          </div>
+          <div class="form-row">
+            <label for="appointment-reason">Motivo</label>
+            <input type="text" id="appointment-reason" name="reason" placeholder="Motivo de la cita"/>
+          </div>
+          <div class="form-row full">
+            <label for="appointment-desc">Descripción</label>
+            <textarea id="appointment-desc" name="description" rows="2" placeholder="Notas adicionales"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="appointment-submit">Guardar Cita</button>
+            <span class="form-note" id="appointment-form-note"></span>
+          </div>
+        </form>
+
+        <div class="table-section">
+          <h3 class="section-subtitle">Citas Registradas</h3>
+          <div id="appointments-table" class="table-container"></div>
+        </div>
+      </div>
+
+      <!-- Sub-sección: Servicios -->
+      <div class="card">
+        <h3 class="card-title">Servicios Médicos</h3>
+        <form id="services-form" class="grid two-columns" novalidate>
+          <div class="form-row">
+            <label for="service-name">Nombre</label>
+            <input type="text" id="service-name" name="name" required placeholder="Nombre del servicio"/>
+          </div>
+          <div class="form-row">
+            <label for="service-price">Precio</label>
+            <input type="number" id="service-price" name="price" min="0" step="0.01" placeholder="0.00"/>
+          </div>
+          <div class="form-row">
+            <label for="service-date">Fecha (opcional)</label>
+            <input type="date" id="service-date" name="date"/>
+          </div>
+          <div class="form-row full">
+            <label for="service-desc">Descripción</label>
+            <textarea id="service-desc" name="description" rows="2" placeholder="Descripción del servicio"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="service-submit">Guardar Servicio</button>
+            <span class="form-note" id="service-form-note"></span>
+          </div>
+        </form>
+
+        <div class="table-section">
+          <h3 class="section-subtitle">Servicios Registrados</h3>
+          <div id="services-table" class="table-container"></div>
+        </div>
+      </div>
+
+      <!-- Sub-sección: Productos -->
+      <div class="card">
+        <h3 class="card-title">Productos / Medicamentos</h3>
+        <form id="products-form" class="grid two-columns" novalidate>
+          <div class="form-row">
+            <label for="product-name">Nombre</label>
+            <input type="text" id="product-name" name="name" required placeholder="Nombre del producto"/>
+          </div>
+          <div class="form-row">
+            <label for="product-price">Precio</label>
+            <input type="number" id="product-price" name="price" min="0" step="0.01" placeholder="0.00"/>
+          </div>
+          <div class="form-row">
+            <label for="product-date">Fecha</label>
+            <input type="date" id="product-date" name="date"/>
+          </div>
+          <div class="form-row full">
+            <label for="product-desc">Descripción</label>
+            <textarea id="product-desc" name="description" rows="2" placeholder="Descripción del producto"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="product-submit">Guardar Producto</button>
+            <span class="form-note" id="product-form-note"></span>
+          </div>
+        </form>
+
+        <div class="table-section">
+          <h3 class="section-subtitle">Productos Registrados</h3>
+          <div id="products-table" class="table-container"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Snackbar / Toast para notificaciones -->
+  <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
